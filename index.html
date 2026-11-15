@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
   <title>Daniel's Hub</title>
   <meta name="description" content="A personal library of AI tools, agent skills, guides and PDFs.">
   <meta name="theme-color" content="#12163F">
@@ -16,61 +16,70 @@
 </head>
 <body>
 
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-    <symbol id="i-chip" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/></symbol>
-    <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.4 2.4-2.6-.6-.6-2.6z"/></symbol>
-    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/></symbol>
-    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></symbol>
-    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
-    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/></symbol>
-    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></symbol>
-    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
-  </svg>
-
   <a class="skip" href="#fresh">Skip to resources</a>
 
   <header class="top" id="top">
-    <a class="brand" href="#top" aria-label="Daniel's Hub, home">
+    <a class="brand" href="index.html" aria-label="Daniel's Hub, home">
       <img src="assets/logo.svg" alt="" width="44" height="44">
       <span>Daniel's Hub</span>
     </a>
-    <nav class="top-nav" aria-label="Main">
-      <a href="#top">Home</a>
-      <a href="#browse">Browse</a>
-      <a href="#fresh">Fresh drops</a>
-    </nav>
+    <div class="top-end">
+      <nav class="top-nav" aria-label="Main">
+        <a href="#top">Home</a>
+        <a href="#browse">Browse</a>
+        <a href="#fresh">Fresh drops</a>
+      </nav>
+      <div class="menu-wrap" data-menu></div>
+    </div>
   </header>
 
   <main>
-    <section class="hero" aria-labelledby="hero-title">
-      <h1 id="hero-title">Everything worth keeping, in one place.</h1>
-      <p class="lede">AI tools, guides and PDFs I found online.</p>
+    <section class="hero collapse" aria-labelledby="hero-title">
+      <div class="collapse-inner hero-inner">
+        <h1 id="hero-title">Everything worth keeping, in one place.</h1>
+        <p class="lede">AI tools, guides and PDFs I found online.</p>
+      </div>
+    </section>
 
+    <div id="search-anchor"></div>
+    <div class="search-wrap" id="search-wrap">
       <form class="search" role="search" id="search-form" autocomplete="off">
         <svg class="ico" aria-hidden="true"><use href="#i-search"/></svg>
         <label class="sr" for="q">Search resources</label>
-        <input id="q" name="q" type="search" placeholder="Search the hub" enterkeyhint="search" autocapitalize="off" spellcheck="false">
+        <input id="q" name="q" type="search" placeholder="Search the hub" enterkeyhint="search" autocapitalize="off" autocorrect="off" spellcheck="false">
         <button type="button" class="clear" id="clear-search" aria-label="Clear search" hidden>
           <svg aria-hidden="true"><use href="#i-x"/></svg>
         </button>
       </form>
-    </section>
+      <button type="button" class="cancel" id="cancel-search">Cancel</button>
+    </div>
 
-    <section class="browse" id="browse" aria-labelledby="browse-title">
-      <h2 id="browse-title" class="sr">Categories</h2>
-      <div class="cats" id="cats"></div>
+    <div class="admin-panel" id="admin-panel" hidden>
+      <a class="admin-link" id="admin-link" href="admin/index.html">
+        <svg aria-hidden="true"><use href="#i-lock"/></svg>
+        <span>Admin Login</span>
+        <svg class="go" aria-hidden="true"><use href="#i-arrow-right"/></svg>
+      </a>
+    </div>
+
+    <section class="browse collapse" id="browse" aria-labelledby="browse-title">
+      <div class="collapse-inner">
+        <h2 id="browse-title" class="sr">Categories</h2>
+        <div class="cats" id="cats"></div>
+      </div>
     </section>
 
     <section class="fresh" id="fresh" aria-labelledby="fresh-title" tabindex="-1">
       <div class="fresh-head">
         <h2 id="fresh-title">Fresh drops</h2>
-        <button type="button" class="reset" id="reset" hidden>Show all</button>
+        <button type="button" class="reset" id="reset" hidden>Clear search</button>
       </div>
       <p class="status" id="status" role="status" aria-live="polite"></p>
       <div class="list" id="list"></div>
       <div class="empty" id="empty" hidden>
-        <p class="empty-title">Nothing matches that yet.</p>
-        <p>Try a shorter word, or pick a category above.</p>
+        <p class="empty-title">Nothing found</p>
+        <p id="empty-text"></p>
+        <button type="button" class="reset" id="empty-reset">Back to home</button>
       </div>
     </section>
   </main>
@@ -87,6 +96,8 @@
   </nav>
 
   <script src="js/data.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/ui.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

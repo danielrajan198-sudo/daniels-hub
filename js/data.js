@@ -6,10 +6,14 @@
 */
 window.HUB_DATA = {
   categories: [
-    { id: "ai", name: "AI & Agents", blurb: "Tools, skills, prompts and workflows", icon: "i-chip" },
-    { id: "tools", name: "Useful Tools", blurb: "Apps, websites and online utilities", icon: "i-tool" },
-    { id: "guides", name: "Guides & PDFs", blurb: "Tutorials and downloadable files", icon: "i-doc" },
-    { id: "tech", name: "Technology", blurb: "Phone, Smart TV and software tips", icon: "i-phone" }
+    { id: "ai", name: "AI & Agents", icon: "i-chip",
+      description: "AI tools, agent skills, prompts, tutorials and useful workflows." },
+    { id: "tools", name: "Useful Tools", icon: "i-tool",
+      description: "Useful apps, websites and online utilities." },
+    { id: "guides", name: "Guides & PDFs", icon: "i-doc",
+      description: "Practical tutorials, step-by-step guides and downloadable PDFs." },
+    { id: "tech", name: "Technology", icon: "i-phone",
+      description: "Phone and Smart TV guides, software tutorials and technology tips." }
   ],
   resources: [
     {
