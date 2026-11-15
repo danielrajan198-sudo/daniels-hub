@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2E2266"/>
+      <stop offset="1" stop-color="#0F3F4C"/>
+    </linearGradient>
+    <linearGradient id="layers" x1="10" y1="14" x2="50" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A88BFA"/>
+      <stop offset="1" stop-color="#45D8C5"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="url(#tile)"/>
+  <path d="M30 15L50 25L30 35L10 25Z" fill="#D7FFF7" stroke="#D7FFF7" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M10 38L30 48L50 38" fill="none" stroke="url(#layers)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M50 5C51 12 53 14 60 15C53 16 51 18 50 25C49 18 47 16 40 15C47 14 49 12 50 5Z" fill="#fff"/>
+</svg>

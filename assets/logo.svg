@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Daniel's Hub">
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2E2266"/>
+      <stop offset="1" stop-color="#0F3F4C"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="0" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#D7FFF7" stop-opacity="0.34"/>
+      <stop offset="0.55" stop-color="#D7FFF7" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="layer" x1="12" y1="30" x2="48" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#8664D9"/>
+      <stop offset="1" stop-color="#45D8C5"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="62" height="62" rx="16" fill="url(#tile)" fill-opacity="0.88"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="15.5" fill="url(#shine)"/>
+  <rect x="1.5" y="1.5" width="61" height="61" rx="15.5" fill="none" stroke="#fff" stroke-opacity="0.38"/>
+  <path d="M30 18L48 27L30 36L12 27Z" fill="#D7FFF7" stroke="#D7FFF7" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M12 37L30 46L48 37" fill="none" stroke="url(#layer)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M12 46L30 55L48 46" fill="none" stroke="#A88BFA" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M49 7C49.7 12.5 51.5 14.3 57 15C51.5 15.7 49.7 17.5 49 23C48.3 17.5 46.5 15.7 41 15C46.5 14.3 48.3 12.5 49 7Z" fill="#fff"/>
+  <circle cx="55" cy="26" r="1.8" fill="#45D8C5"/>
+</svg>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Daniel's Hub</title>
+  <meta name="description" content="A personal library of AI tools, agent skills, guides and PDFs.">
+  <meta name="theme-color" content="#12163F">
+  <meta name="color-scheme" content="dark">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/app-icon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="i-chip" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/></symbol>
+    <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5 5L3 18l3 3 6.7-6.7a4 4 0 0 0 5-5l-2.4 2.4-2.6-.6-.6-2.6z"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  </svg>
+
+  <a class="skip" href="#fresh">Skip to resources</a>
+
+  <header class="top" id="top">
+    <a class="brand" href="#top" aria-label="Daniel's Hub, home">
+      <img src="assets/logo.svg" alt="" width="44" height="44">
+      <span>Daniel's Hub</span>
+    </a>
+    <nav class="top-nav" aria-label="Main">
+      <a href="#top">Home</a>
+      <a href="#browse">Browse</a>
+      <a href="#fresh">Fresh drops</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <h1 id="hero-title">Everything worth keeping, in one place.</h1>
+      <p class="lede">AI tools, guides and PDFs I found online.</p>
+
+      <form class="search" role="search" id="search-form" autocomplete="off">
+        <svg class="ico" aria-hidden="true"><use href="#i-search"/></svg>
+        <label class="sr" for="q">Search resources</label>
+        <input id="q" name="q" type="search" placeholder="Search the hub" enterkeyhint="search" autocapitalize="off" spellcheck="false">
+        <button type="button" class="clear" id="clear-search" aria-label="Clear search" hidden>
+          <svg aria-hidden="true"><use href="#i-x"/></svg>
+        </button>
+      </form>
+    </section>
+
+    <section class="browse" id="browse" aria-labelledby="browse-title">
+      <h2 id="browse-title" class="sr">Categories</h2>
+      <div class="cats" id="cats"></div>
+    </section>
+
+    <section class="fresh" id="fresh" aria-labelledby="fresh-title" tabindex="-1">
+      <div class="fresh-head">
+        <h2 id="fresh-title">Fresh drops</h2>
+        <button type="button" class="reset" id="reset" hidden>Show all</button>
+      </div>
+      <p class="status" id="status" role="status" aria-live="polite"></p>
+      <div class="list" id="list"></div>
+      <div class="empty" id="empty" hidden>
+        <p class="empty-title">Nothing matches that yet.</p>
+        <p>Try a shorter word, or pick a category above.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Daniel's Hub</p>
+    <p class="foot-note">Sample resources are shown until the dashboard is connected.</p>
+  </footer>
+
+  <nav class="dock" aria-label="Quick navigation">
+    <a href="#top" id="dock-home" aria-current="page"><svg aria-hidden="true"><use href="#i-home"/></svg><span>Home</span></a>
+    <a href="#browse" id="dock-browse"><svg aria-hidden="true"><use href="#i-grid"/></svg><span>Browse</span></a>
+    <a href="#top" id="dock-search"><svg aria-hidden="true"><use href="#i-search"/></svg><span>Search</span></a>
+  </nav>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
