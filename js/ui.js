@@ -35,6 +35,8 @@
   function icon(id) {
     var svg = document.createElementNS(NS, "svg");
     svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("width", "22");
+    svg.setAttribute("height", "22");
     var use = document.createElementNS(NS, "use");
     use.setAttribute("href", "#" + id);
     svg.appendChild(use);
@@ -177,6 +179,15 @@
   }
 
   initMenu();
+
+  /* Build tag in the footer. If the page and the scripts show different
+     numbers, the browser is using old cached files. */
+  var BUILD = "20261117a";
+  var tag = document.getElementById("build");
+  if (tag) {
+    var pageBuild = tag.getAttribute("data-page");
+    tag.textContent = pageBuild === BUILD ? "Build " + BUILD : "Build " + pageBuild + " / scripts " + BUILD + " (refresh to update)";
+  }
 
   window.Hub = {
     data: data,

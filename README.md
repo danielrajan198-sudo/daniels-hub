@@ -28,3 +28,10 @@ There is no build step and nothing to install.
 - Homepage, category pages, search, menu and resource cards: done, using sample data.
 - The hidden Admin Login link only reveals a link. It is not security. Real protection will come from Supabase sign-in and database rules.
 - Admin dashboard, login, database and PDF storage: not built yet.
+
+## Updating files safely (cache note)
+
+Phones keep copies of CSS and JavaScript for several minutes. Every page therefore loads them as
+`css/style.css?v=BUILD` and `js/app.js?v=BUILD`. When you change any CSS or JS file, change `BUILD`
+in all the HTML files and in `js/ui.js`. The footer shows the build number; if it says
+"refresh to update", the phone is still using old files.

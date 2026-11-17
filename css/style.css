@@ -77,6 +77,8 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   display: flex; align-items: center; justify-content: space-between;
   padding-top: calc(16px + env(safe-area-inset-top, 0px));
   padding-bottom: 8px;
+  max-height: 140px;
+  transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.2s ease;
 }
 .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; min-height: 44px; }
 .brand img { display: block; width: 44px; height: 44px; }
@@ -129,7 +131,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 }
 
 /* Hero */
-.hero-inner { display: grid; gap: 12px; padding: 28px 0 16px; }
+.hero-inner { display: grid; gap: 12px; padding: 28px 0 16px; transition: padding 0.3s ease, gap 0.3s ease; }
 .hero-inner h1 { font-size: 32px; line-height: 1.15; font-weight: 700; letter-spacing: -0.02em; text-wrap: balance; max-width: 18ch; }
 .lede { color: var(--text-soft); font-size: 16px; }
 
@@ -322,6 +324,16 @@ a.card:hover { background: var(--glass-strong); transform: translateY(-2px); }
   }
   .is-focused .cancel,
   .is-searching .cancel { display: inline-flex; align-items: center; }
+  /* The title bar folds away too, so the search bar is truly at the top of the screen
+     and does not depend on how long the page is. It comes back when search is cancelled. */
+  .is-focused .top,
+  .is-searching .top {
+    max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; overflow: hidden;
+    visibility: hidden; pointer-events: none;
+    transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.2s ease, visibility 0s 0.3s;
+  }
+  .is-focused .hero .hero-inner,
+  .is-searching .hero .hero-inner { padding-top: 0; padding-bottom: 0; gap: 0; }
   /* The keyboard is open, so the dock would only sit on top of it. */
   .is-focused .dock { display: none; }
 }
@@ -360,3 +372,5 @@ a.card:hover { background: var(--glass-strong); transform: translateY(-2px); }
   @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
   @keyframes pop { from { opacity: 0; transform: scale(0.96) translateY(-4px); } to { opacity: 1; transform: none; } }
 }
+
+.build { font-size: 11px; opacity: .45; margin: 6px 0 0; }

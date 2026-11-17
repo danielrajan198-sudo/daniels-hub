@@ -44,9 +44,20 @@
 
   /* Hidden admin link: shown only when the exact trigger phrase is typed.
      This reveals a link and nothing more. It never signs anyone in. */
+  /* Lower-case, unify the dash and space characters that phone keyboards
+     insert, and trim. "Hub-Admin-Access " and "hub–admin–access" both match. */
+  function normalise(text) {
+    return String(text || "")
+      .replace(/[\u2010-\u2015\u2212]/g, "-")
+      .replace(/[\u00a0\u2000-\u200b\u202f\u3000]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+  }
+
   function adminRevealed() {
-    var trigger = String(cfg.adminTrigger || "").trim().toLowerCase();
-    return trigger.length > 0 && query.trim().toLowerCase() === trigger;
+    var trigger = normalise(cfg.adminTrigger);
+    return trigger.length > 0 && normalise(query) === trigger;
   }
 
   function visibleResources() {
@@ -101,10 +112,7 @@
   /* Phones: bring the search bar to the top so the keyboard never covers it. */
   function bringSearchToTop() {
     if (!isPhone()) return;
-    window.setTimeout(function () {
-      var top = els.anchor.getBoundingClientRect().top + window.pageYOffset;
-      window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
-    }, 330);
+    window.setTimeout(function () { window.scrollTo({ top: 0, behavior: "smooth" }); }, 30);
   }
 
   function resetSearch() {
@@ -116,10 +124,17 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  els.input.addEventListener("input", function () {
+  /* Android keyboards can finish a word (autocorrect, voice, paste) without a
+     plain "input" event, so every route that changes the text re-runs render. */
+  function onText() {
+    if (els.input.value === query) return;
     query = els.input.value;
     render();
+  }
+  ["input", "change", "keyup", "compositionend", "paste", "search"].forEach(function (ev) {
+    els.input.addEventListener(ev, function () { window.setTimeout(onText, 0); });
   });
+  els.input.addEventListener("input", onText);
 
   els.input.addEventListener("focus", function () {
     window.clearTimeout(blurTimer);
