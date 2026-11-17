@@ -82,6 +82,7 @@
   }
 
   function render() {
+    window.setTimeout(updateDock, 0);
     var searching = query.trim().length > 0;
     var admin = adminRevealed();
     var items = visibleResources();
@@ -121,6 +122,9 @@
     els.input.blur();
     body.classList.remove("is-focused");
     render();
+    homeLock = true;
+    window.setTimeout(function () { homeLock = false; updateDock(); }, 800);
+    updateDock();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -139,6 +143,7 @@
   els.input.addEventListener("focus", function () {
     window.clearTimeout(blurTimer);
     body.classList.add("is-focused");
+    updateDock();
     bringSearchToTop();
   });
 
@@ -146,6 +151,7 @@
     /* A short delay lets a tap on Cancel, a card or the clear button land before the layout changes. */
     blurTimer = window.setTimeout(function () {
       body.classList.remove("is-focused");
+      updateDock();
     }, 200);
   });
 
@@ -171,13 +177,41 @@
     els.input.focus();
   });
 
-  /* Dock highlight: Home near the top, Browse once the hero has scrolled away. */
+  /* Home and Browse also leave search mode, so the highlight and the page agree. */
+  els.dockHome.addEventListener("click", function (e) {
+    if (body.classList.contains("is-focused") || body.classList.contains("is-searching")) {
+      e.preventDefault();
+      resetSearch();
+    }
+  });
+  els.dockBrowse.addEventListener("click", function (e) {
+    if (body.classList.contains("is-focused") || body.classList.contains("is-searching")) {
+      e.preventDefault();
+      query = "";
+      els.input.value = "";
+      els.input.blur();
+      body.classList.remove("is-focused");
+      render();
+      /* Wait for the hero and header to finish unfolding, then scroll to the categories. */
+      window.setTimeout(function () {
+        var top = document.getElementById("browse").getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo({ top: Math.max(0, top - 12), behavior: "smooth" });
+      }, 380);
+    }
+  });
+
+  /* Dock highlight: Search while search is active, otherwise Home near the top and
+     Browse once the hero has scrolled away. After Cancel, Home is held for a moment
+     so the smooth scroll back to the top cannot flash Browse. */
+  var homeLock = false;
   function updateDock() {
-    var past = window.scrollY > 220 && !body.classList.contains("is-searching");
-    var on = past ? els.dockBrowse : els.dockHome;
-    var off = past ? els.dockHome : els.dockBrowse;
-    on.setAttribute("aria-current", "page");
-    off.removeAttribute("aria-current");
+    var searchMode = body.classList.contains("is-focused") || body.classList.contains("is-searching");
+    var past = !homeLock && document.getElementById("browse").getBoundingClientRect().top < 140;
+    var active = searchMode ? els.dockSearch : (past ? els.dockBrowse : els.dockHome);
+    [els.dockHome, els.dockBrowse, els.dockSearch].forEach(function (a) {
+      if (a === active) a.setAttribute("aria-current", "page");
+      else a.removeAttribute("aria-current");
+    });
   }
   window.addEventListener("scroll", updateDock, { passive: true });
 

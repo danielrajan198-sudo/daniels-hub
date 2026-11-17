@@ -292,7 +292,8 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 /* Floating dock (phones) */
 .dock {
   position: fixed; left: 50%; transform: translateX(-50%);
-  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px) + var(--kb, 0px));
+  transition: bottom 0.2s ease;
   display: flex; gap: 4px; padding: 6px; border-radius: 32px; z-index: 20;
   background: rgba(36, 32, 92, 0.72); border: 1px solid var(--glass-line);
   -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
@@ -337,8 +338,12 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
   }
   .is-focused .hero .hero-inner,
   .is-searching .hero .hero-inner { padding-top: 0; padding-bottom: 0; gap: 0; }
-  /* The keyboard is open, so the dock would only sit on top of it. */
-  .is-focused .dock { display: none; }
+}
+
+/* Very narrow phones: tighter dock so all three items fit */
+@media (max-width: 360px) {
+  .dock { gap: 2px; padding: 5px; }
+  .dock a { padding: 0 12px; gap: 6px; }
 }
 
 /* Tablet and desktop */
