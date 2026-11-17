@@ -68,7 +68,23 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 }
 .skip:focus { top: calc(8px + env(safe-area-inset-top, 0px)); }
 
-:focus-visible { outline: 3px solid var(--mint); outline-offset: 3px; border-radius: 8px; }
+:focus-visible { outline: 3px solid var(--mint); outline-offset: 3px; }
+
+/* Tap feedback. Android Chrome paints its own blue flash on every tap unless this is set,
+   so it is switched off and replaced by the pressed styles below. */
+html { -webkit-tap-highlight-color: transparent; }
+a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+
+/* Pressed state: a gentle brightening and a very small squeeze. Same for every control. */
+.menu-btn, .menu-item, .clear, .cancel, .reset, .back, .admin-link, .top-nav a, .dock a, .cat, a.card {
+  transition: transform 0.15s ease, filter 0.15s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.menu-btn:active, .clear:active, .cancel:active, .reset:active, .back:active, .admin-link:active,
+.dock a:active, .cat:active, a.card:active, .top-nav a:active {
+  filter: brightness(1.18); transform: scale(0.97);
+}
+.menu-item:active { filter: brightness(1.22); background: var(--glass-strong); }
+.cat:active, a.card:active { background: var(--glass-strong); transform: scale(0.98); }
 
 .top, main, .foot { max-width: var(--max); margin-inline: auto; }
 
@@ -89,7 +105,6 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   text-decoration: none; padding: 0 16px; min-height: 44px; display: inline-flex; align-items: center;
   border-radius: 22px; color: var(--text-soft); font-weight: 500; font-size: 15px;
 }
-.top-nav a:hover { background: var(--glass); color: var(--text); }
 
 /* Hamburger menu */
 .menu-wrap { position: relative; }
@@ -98,9 +113,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   display: grid; place-items: center; color: var(--text);
   background: var(--glass); border: 1px solid var(--glass-line);
   -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-  transition: background 0.2s, color 0.2s;
 }
-.menu-btn:hover { background: var(--glass-strong); }
 .menu-btn svg { width: 22px; height: 22px; }
 .menu-btn[aria-expanded="true"] { background: var(--text); color: var(--ink); }
 .menu-panel {
@@ -116,7 +129,6 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   border-radius: var(--radius-md); text-decoration: none; font-weight: 500; font-size: 15px;
 }
 .menu-item svg { width: 22px; height: 22px; flex: none; }
-.menu-item:hover { background: var(--glass-strong); }
 .menu-item[aria-current="page"] { background: var(--glass); font-weight: 600; }
 
 /* Parts of the page that can fold away while searching */
@@ -160,14 +172,12 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   flex: none; width: 44px; height: 44px; border-radius: 50%; border: 0;
   background: transparent; color: var(--text); display: grid; place-items: center; cursor: pointer;
 }
-.clear:hover { background: var(--glass); }
 .clear svg { width: 18px; height: 18px; }
 .cancel {
   display: none; flex: none; appearance: none; cursor: pointer;
   min-height: 44px; padding: 0 12px; border: 0; border-radius: 22px;
   background: transparent; color: var(--text); font: 600 15px var(--font);
 }
-.cancel:hover { background: var(--glass); }
 
 /* Hidden admin link, revealed only by the exact trigger phrase */
 .admin-panel { margin-top: 12px; }
@@ -180,7 +190,6 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
 .admin-link svg { width: 20px; height: 20px; flex: none; }
 .admin-link span { flex: 1; }
 .admin-link .go { opacity: 0.8; }
-.admin-link:hover { background: var(--glass-strong); }
 
 /* Categories */
 .cats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 20px 0 8px; }
@@ -191,9 +200,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   background: var(--glass); border: 1px solid var(--glass-line);
   -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
   display: flex; flex-direction: column; justify-content: space-between; gap: 12px;
-  transition: transform 0.2s, background 0.2s, border-color 0.2s;
 }
-.cat:hover { background: var(--glass-strong); transform: translateY(-2px); }
 .cat svg { width: 26px; height: 26px; }
 .cat-name { font-weight: 600; font-size: 15px; line-height: 1.25; }
 .cat-count { font-size: 12px; color: var(--text-soft); margin-top: 2px; }
@@ -208,7 +215,6 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   display: inline-flex; align-items: center;
   background: var(--glass); border: 1px solid var(--glass-line);
 }
-.reset:hover { background: var(--glass-strong); }
 .status { color: var(--text-soft); font-size: 14px; margin-bottom: 8px; }
 .status:empty { display: none; }
 
@@ -220,9 +226,7 @@ svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round
   background: var(--glass); border: 1px solid var(--glass-line);
   -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
   text-decoration: none; color: var(--text);
-  transition: transform 0.2s, background 0.2s;
 }
-a.card:hover { background: var(--glass-strong); transform: translateY(-2px); }
 .card-icon {
   flex: none; width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center;
   background: linear-gradient(135deg, #8E7BFF, #12B5C9);
@@ -257,7 +261,6 @@ a.card:hover { background: var(--glass-strong); transform: translateY(-2px); }
   -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
 }
 .back svg { width: 18px; height: 18px; }
-.back:hover { background: var(--glass-strong); }
 .cat-head { display: grid; gap: 12px; padding: 24px 0 20px; justify-items: start; }
 .cat-title-row { display: flex; align-items: center; gap: 14px; }
 .card-icon.big { width: 56px; height: 56px; border-radius: 18px; }
@@ -374,3 +377,21 @@ a.card:hover { background: var(--glass-strong); transform: translateY(-2px); }
 }
 
 .build { font-size: 11px; opacity: .45; margin: 6px 0 0; }
+
+
+/* Hover only where a real pointer exists. On touch screens :hover sticks after a tap. */
+@media (hover: hover) and (pointer: fine) {
+  .top-nav a:hover { background: var(--glass); color: var(--text); }
+  .menu-btn:hover { background: var(--glass-strong); }
+  .menu-item:hover { background: var(--glass-strong); }
+  .clear:hover { background: var(--glass); }
+  .cancel:hover { background: var(--glass); }
+  .admin-link:hover { background: var(--glass-strong); }
+  .cat:hover { background: var(--glass-strong); transform: translateY(-2px); }
+  .reset:hover { background: var(--glass-strong); }
+  a.card:hover { background: var(--glass-strong); transform: translateY(-2px); }
+  .back:hover { background: var(--glass-strong); }
+}
+
+/* Pressed look wins over hover while a finger or mouse button is down. */
+.cat:active, a.card:active { background: var(--glass-strong); transform: scale(0.98); }

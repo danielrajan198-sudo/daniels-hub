@@ -182,7 +182,7 @@
 
   /* Build tag in the footer. If the page and the scripts show different
      numbers, the browser is using old cached files. */
-  var BUILD = "20261117a";
+  var BUILD = "20261117b";
   var tag = document.getElementById("build");
   if (tag) {
     var pageBuild = tag.getAttribute("data-page");
