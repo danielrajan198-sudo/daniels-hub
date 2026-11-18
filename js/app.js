@@ -177,26 +177,12 @@
     els.input.focus();
   });
 
-  /* Home and Browse also leave search mode, so the highlight and the page agree. */
+  /* Home also leaves search mode, so the highlight and the page agree.
+     Browse is a normal link to its own page (browse.html), so it needs no handler. */
   els.dockHome.addEventListener("click", function (e) {
     if (body.classList.contains("is-focused") || body.classList.contains("is-searching")) {
       e.preventDefault();
       resetSearch();
-    }
-  });
-  els.dockBrowse.addEventListener("click", function (e) {
-    if (body.classList.contains("is-focused") || body.classList.contains("is-searching")) {
-      e.preventDefault();
-      query = "";
-      els.input.value = "";
-      els.input.blur();
-      body.classList.remove("is-focused");
-      render();
-      /* Wait for the hero and header to finish unfolding, then scroll to the categories. */
-      window.setTimeout(function () {
-        var top = document.getElementById("browse").getBoundingClientRect().top + window.pageYOffset;
-        window.scrollTo({ top: Math.max(0, top - 12), behavior: "smooth" });
-      }, 380);
     }
   });
 

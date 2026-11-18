@@ -400,3 +400,116 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 
 /* Pressed look wins over hover while a finger or mouse button is down. */
 .cat:active, a.card:active { background: var(--glass-strong); transform: scale(0.98); }
+
+/* ===== Browse page and collection pages ===== */
+.top-nav a[aria-current="page"] { background: var(--glass); color: var(--text); }
+
+.browse-head { display: grid; gap: 12px; padding: 28px 0 4px; }
+.browse-head h1 { font-size: 36px; line-height: 1.1; font-weight: 700; letter-spacing: -0.02em; }
+.browse-head .lede { max-width: 40ch; }
+
+.b-section { padding-top: 28px; }
+.b-section h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+.b-sub { color: var(--text-soft); font-size: 14px; margin-top: 4px; }
+
+/* Category cards: two per row on phones */
+.bcats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
+.bcat {
+  display: flex; flex-direction: column; gap: 12px; min-width: 0; min-height: 188px; padding: 14px;
+  color: var(--text); text-decoration: none;
+  border-radius: var(--radius-lg); background: var(--glass); border: 1px solid var(--glass-line);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+}
+.bcat-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.bcat .card-icon { width: 48px; height: 48px; border-radius: 15px; }
+.go-dot {
+  flex: none; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
+  background: rgba(255, 255, 255, 0.12); border: 1px solid var(--glass-line);
+  transition: transform 0.2s ease;
+}
+.go-dot svg { width: 16px; height: 16px; }
+.bcat-body { flex: 1; min-width: 0; }
+.bcat-name { font-weight: 600; font-size: 16px; line-height: 1.25; }
+.bcat-desc {
+  color: var(--text-soft); font-size: 13px; line-height: 1.4; margin-top: 4px;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
+}
+.bcat-count { font-size: 12px; color: var(--text-soft); }
+
+/* Collection colours. Each card picks one with data-accent. */
+[data-accent] { --accent-a: #8E7BFF; --accent-b: #12B5C9; --glow: rgba(142, 123, 255, 0.5); }
+[data-accent="teal"] { --accent-a: #45D8C5; --accent-b: #8E7BFF; --glow: rgba(69, 216, 197, 0.45); }
+[data-accent="sunset"] { --accent-a: #FF9A5A; --accent-b: #E24CA8; --glow: rgba(226, 76, 168, 0.45); }
+
+/* Collection cards: one per row on phones */
+.colls { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 14px; }
+.coll {
+  position: relative; overflow: hidden; min-width: 0;
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: start;
+  padding: 16px; color: var(--text); text-decoration: none;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.07));
+  border: 1px solid var(--glass-line);
+  box-shadow: 0 12px 30px -18px var(--glow);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+}
+/* Soft coloured glow in the corner. A plain gradient, no blur filter, so it stays smooth. */
+.coll::after {
+  content: ""; position: absolute; right: -48px; top: -48px; width: 150px; height: 150px;
+  border-radius: 50%; pointer-events: none; opacity: 0.5;
+  background: radial-gradient(closest-side, var(--glow), transparent);
+}
+.coll-art {
+  position: relative; z-index: 1; flex: none; width: 64px; height: 64px; border-radius: 20px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
+  box-shadow: 0 8px 20px -8px var(--glow);
+}
+.coll-art svg { width: 30px; height: 30px; stroke: #fff; }
+.coll-art.big { width: 56px; height: 56px; border-radius: 18px; }
+.coll-art.big svg { width: 28px; height: 28px; }
+.coll-body { position: relative; z-index: 1; min-width: 0; }
+.coll-title { font-weight: 700; font-size: 17px; line-height: 1.25; }
+.coll-desc { color: var(--text-soft); font-size: 14px; line-height: 1.45; margin-top: 3px; }
+.coll-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 14px; }
+.coll-count { font-size: 12px; color: var(--text-soft); }
+.explore {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 10px 0 14px;
+  border-radius: 18px; font-weight: 600; font-size: 14px; background: var(--text); color: var(--ink);
+}
+.explore svg { width: 16px; height: 16px; }
+
+/* Press and hover: same gentle feel as the rest of the site */
+.bcat, .coll { transition: transform 0.15s ease, filter 0.15s ease, background 0.2s ease, border-color 0.2s ease; }
+.bcat:active { filter: brightness(1.18); transform: scale(0.97); background: var(--glass-strong); }
+.coll:active { filter: brightness(1.15); transform: scale(0.98); }
+@media (hover: hover) and (pointer: fine) {
+  .bcat:hover { background: var(--glass-strong); transform: translateY(-2px); }
+  .bcat:hover .go-dot { transform: translateX(2px); }
+  .coll:hover { filter: brightness(1.1); transform: translateY(-2px); }
+}
+
+/* "backwards" fill only: a finished animation must not keep overriding the press and hover transforms. */
+@media (prefers-reduced-motion: no-preference) {
+  .bcat, .coll { animation: rise 0.35s ease backwards; }
+  .bcat:nth-child(2), .coll:nth-child(2) { animation-delay: 0.05s; }
+  .bcat:nth-child(3), .coll:nth-child(3) { animation-delay: 0.1s; }
+  .bcat:nth-child(4) { animation-delay: 0.15s; }
+}
+
+/* Very narrow phones: slightly tighter category cards */
+@media (max-width: 340px) {
+  .bcats { gap: 10px; }
+  .bcat { padding: 12px; min-height: 176px; }
+  .coll { gap: 12px; padding: 14px; }
+  .coll-art { width: 56px; height: 56px; border-radius: 18px; }
+}
+
+@media (min-width: 720px) {
+  .browse-head { padding-top: 48px; }
+  .browse-head h1 { font-size: 52px; }
+  .b-section h2 { font-size: 26px; }
+  .bcats { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .colls { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .coll { grid-template-columns: minmax(0, 1fr); }
+}

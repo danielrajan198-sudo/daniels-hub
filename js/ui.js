@@ -29,6 +29,9 @@
     '<symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>' +
     '<symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>' +
     '<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>' +
+    '<symbol id="i-spark" viewBox="0 0 24 24"><path d="M11 3l1.9 5.1L18 10l-5.1 1.9L11 17l-1.9-5.1L4 10l5.1-1.9z"/><path d="M19 15v5M16.5 17.5h5"/></symbol>' +
+    '<symbol id="i-cap" viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.4 2.7 3 6 3s6-1.6 6-3v-4.5"/><path d="M22 9v6"/></symbol>' +
+    '<symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L5 14h6l-1 8 8-12h-6z"/></symbol>' +
     "</svg>";
   document.body.insertAdjacentHTML("afterbegin", SPRITE);
 
@@ -61,6 +64,25 @@
     return data.resources.slice().sort(function (a, b) {
       return b.date.localeCompare(a.date);
     });
+  }
+
+  function collections() {
+    return data.collections || [];
+  }
+
+  function collectionById(id) {
+    var list = collections();
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].id === id) return list[i];
+    }
+    return null;
+  }
+
+  /* The resources a collection groups together, newest first. Ids that do not
+     exist in the data are skipped, so a collection never shows anything invented. */
+  function collectionResources(collection) {
+    var ids = collection.resources || [];
+    return sortedResources().filter(function (r) { return ids.indexOf(r.id) !== -1; });
   }
 
   function formatDate(iso) {
@@ -182,7 +204,7 @@
 
   /* Build tag in the footer. If the page and the scripts show different
      numbers, the browser is using old cached files. */
-  var BUILD = "20261117c";
+  var BUILD = "20261118a";
   var tag = document.getElementById("build");
   if (tag) {
     var pageBuild = tag.getAttribute("data-page");
@@ -194,6 +216,9 @@
     icon: icon,
     el: el,
     categoryById: categoryById,
+    collections: collections,
+    collectionById: collectionById,
+    collectionResources: collectionResources,
     sortedResources: sortedResources,
     formatDate: formatDate,
     plural: plural,

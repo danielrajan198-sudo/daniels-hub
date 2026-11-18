@@ -10,24 +10,35 @@ There is no build step and nothing to install.
 | File | What it does |
 | --- | --- |
 | `index.html` | Homepage |
+| `browse.html` | Browse page: all four categories and the curated collections |
 | `category.html` | One page for every category, opened as `category.html?c=ai` |
+| `collection.html` | One page for every collection, opened as `collection.html?c=best-ai-websites` |
 | `about.html`, `saved.html` | Pages reached from the hamburger menu |
 | `admin/index.html` | Placeholder admin page. It has no login yet |
 | `css/style.css` | The Frost Glass look. Colours are at the top of the file |
 | `js/ui.js` | Shared pieces: icons, resource cards, hamburger menu |
 | `js/app.js` | Homepage: search and the hidden admin link |
+| `js/browse.js` | Browse page |
 | `js/category.js` | Category pages |
+| `js/collection.js` | Collection pages |
 | `js/config.js` | Settings, including the secret phrase that reveals the Admin Login link |
-| `js/data.js` | **Sample** categories and resources. The dashboard will replace this later |
+| `js/data.js` | **Sample** categories, resources and collections. The dashboard will replace this later |
 | `assets/logo.svg` | Logo for the website header |
 | `assets/favicon.svg` | Simplified logo for the browser tab |
 | `assets/app-icon.svg` | Logo for a future Android app icon |
 
 ## Status
 
-- Homepage, category pages, search, menu and resource cards: done, using sample data.
+- Homepage, Browse page, category pages, collection pages, search, menu and resource cards: done, using sample data.
 - The hidden Admin Login link only reveals a link. It is not security. Real protection will come from Supabase sign-in and database rules.
 - Admin dashboard, login, database and PDF storage: not built yet.
+
+## Collections
+
+A collection is a named group of resources. It is defined in `js/data.js` under `collections`
+as a list of resource ids. It never copies a resource, so a resource stays in its own category
+and can also appear in any number of collections. An id that does not exist is skipped.
+`accent` picks the card colour: `violet`, `teal` or `sunset`.
 
 ## Updating files safely (cache note)
 
