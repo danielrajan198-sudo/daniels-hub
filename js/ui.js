@@ -79,9 +79,9 @@
     return Math.round(t / 86400000);
   }
 
-  var FRESH_DAYS = 7;
+  var FRESH_DAYS = 30;
 
-  /* Fresh drops: published today or in the previous 6 days (7 calendar days in all),
+  /* Fresh drops: published today or in the previous 29 days (30 calendar days in all),
      going by the visitor's own calendar day. Uses only the resource's publication
      date ("date"), never an edit date. No valid date, or a date in the future,
      means not fresh. */
@@ -237,7 +237,7 @@
 
   /* Build tag in the footer. If the page and the scripts show different
      numbers, the browser is using old cached files. */
-  var BUILD = "20261120c";
+  var BUILD = "20261120d";
   var tag = document.getElementById("build");
   if (tag) {
     var pageBuild = tag.getAttribute("data-page");

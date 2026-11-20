@@ -63,7 +63,7 @@
 
   function visibleResources() {
     var terms = query.toLowerCase().split(/\s+/).filter(Boolean);
-    /* No search: Fresh drops, which is only what was published in the last 7 days.
+    /* No search: Fresh drops, which is only what was published in the last 30 days.
        Search, the category counts and the other pages still use every resource. */
     if (terms.length === 0) return H.freshResources();
     return resources.filter(function (r) { return H.matches(r, terms); });
@@ -110,10 +110,10 @@
     items.forEach(function (r) { els.list.appendChild(H.renderCard(r)); });
 
     els.empty.hidden = items.length > 0;
-    els.emptyTitle.textContent = searching ? "Nothing found" : "No new drops this week";
+    els.emptyTitle.textContent = searching ? "Nothing found" : "No new drops lately";
     els.emptyText.textContent = searching
       ? "No matches for “" + query.trim() + "”. Try a shorter word, or search by category or tag."
-      : "Nothing was added in the last 7 days. Everything is still in Browse and Search.";
+      : "Nothing was added in the last 30 days. Everything is still in Browse and Search.";
     els.emptyReset.hidden = !searching;
   }
 

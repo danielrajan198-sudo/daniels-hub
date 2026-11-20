@@ -9,7 +9,7 @@
   exist below, and a resource can sit in its own category and in any number
   of collections. An id that does not exist is simply skipped.
   "date" on a resource is its publication date, written YYYY-MM-DD. Fresh drops on
-  the homepage shows only resources whose date is within the last 7 days. Do not change
+  the homepage shows only resources whose date is within the last 30 days. Do not change
   "date" when a resource is edited. A resource with no valid date is never shown as fresh,
   but it still appears in its category, collections and search.
   "accent" picks the colour of a collection card: violet, teal or sunset.

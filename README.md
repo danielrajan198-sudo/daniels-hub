@@ -43,7 +43,7 @@ and can also appear in any number of collections. An id that does not exist is s
 ## Fresh drops
 
 The homepage list shows only resources whose `date` (the publication date, `YYYY-MM-DD`) is
-today or in the previous 6 days, by the visitor's calendar day. Older resources drop off by
+today or in the previous 29 days (30 calendar days), by the visitor's calendar day. Older resources drop off by
 themselves but stay in their category, collections and search. A resource with a missing or
 invalid `date`, or one dated in the future, is never shown as fresh. Do not change `date` when
 editing a resource.
