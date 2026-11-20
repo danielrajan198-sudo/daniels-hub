@@ -40,6 +40,14 @@ as a list of resource ids. It never copies a resource, so a resource stays in it
 and can also appear in any number of collections. An id that does not exist is skipped.
 `accent` picks the card colour: `violet`, `teal` or `sunset`.
 
+## Fresh drops
+
+The homepage list shows only resources whose `date` (the publication date, `YYYY-MM-DD`) is
+today or in the previous 6 days, by the visitor's calendar day. Older resources drop off by
+themselves but stay in their category, collections and search. A resource with a missing or
+invalid `date`, or one dated in the future, is never shown as fresh. Do not change `date` when
+editing a resource.
+
 ## Updating files safely (cache note)
 
 Phones keep copies of CSS and JavaScript for several minutes. Every page therefore loads them as

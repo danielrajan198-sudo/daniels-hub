@@ -27,6 +27,7 @@
     status: document.getElementById("status"),
     list: document.getElementById("list"),
     empty: document.getElementById("empty"),
+    emptyTitle: document.querySelector("#empty .empty-title"),
     emptyText: document.getElementById("empty-text"),
     reset: document.getElementById("reset"),
     emptyReset: document.getElementById("empty-reset"),
@@ -62,7 +63,9 @@
 
   function visibleResources() {
     var terms = query.toLowerCase().split(/\s+/).filter(Boolean);
-    if (terms.length === 0) return resources;
+    /* No search: Fresh drops, which is only what was published in the last 7 days.
+       Search, the category counts and the other pages still use every resource. */
+    if (terms.length === 0) return H.freshResources();
     return resources.filter(function (r) { return H.matches(r, terms); });
   }
 
@@ -107,7 +110,11 @@
     items.forEach(function (r) { els.list.appendChild(H.renderCard(r)); });
 
     els.empty.hidden = items.length > 0;
-    els.emptyText.textContent = "No matches for “" + query.trim() + "”. Try a shorter word, or search by category or tag.";
+    els.emptyTitle.textContent = searching ? "Nothing found" : "No new drops this week";
+    els.emptyText.textContent = searching
+      ? "No matches for “" + query.trim() + "”. Try a shorter word, or search by category or tag."
+      : "Nothing was added in the last 7 days. Everything is still in Browse and Search.";
+    els.emptyReset.hidden = !searching;
   }
 
   /* Phones: bring the search bar to the top so the keyboard never covers it. */
@@ -122,8 +129,6 @@
     els.input.blur();
     body.classList.remove("is-focused");
     render();
-    homeLock = true;
-    window.setTimeout(function () { homeLock = false; updateDock(); }, 800);
     updateDock();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -186,20 +191,17 @@
     }
   });
 
-  /* Dock highlight: Search while search is active, otherwise Home near the top and
-     Browse once the hero has scrolled away. After Cancel, Home is held for a moment
-     so the smooth scroll back to the top cannot flash Browse. */
-  var homeLock = false;
+  /* Dock highlight on the homepage: Search while search is active, otherwise Home.
+     Browse is its own page, so it is highlighted only there, never from scrolling
+     past the categories or through Fresh drops. Scrolling does not change it. */
   function updateDock() {
     var searchMode = body.classList.contains("is-focused") || body.classList.contains("is-searching");
-    var past = !homeLock && document.getElementById("browse").getBoundingClientRect().top < 140;
-    var active = searchMode ? els.dockSearch : (past ? els.dockBrowse : els.dockHome);
+    var active = searchMode ? els.dockSearch : els.dockHome;
     [els.dockHome, els.dockBrowse, els.dockSearch].forEach(function (a) {
       if (a === active) a.setAttribute("aria-current", "page");
       else a.removeAttribute("aria-current");
     });
   }
-  window.addEventListener("scroll", updateDock, { passive: true });
 
   /* If the keyboard overlays the page instead of resizing it, keep room to scroll the last result into view. */
   if (window.visualViewport) {

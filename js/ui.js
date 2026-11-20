@@ -62,8 +62,40 @@
 
   function sortedResources() {
     return data.resources.slice().sort(function (a, b) {
-      return b.date.localeCompare(a.date);
+      return String(b.date || "").localeCompare(String(a.date || ""));
     });
+  }
+
+  /* Publication date as whole days (UTC midnight of that calendar day), or null.
+     Only a real "YYYY-MM-DD" date counts. Missing, malformed and impossible
+     dates (such as 2026-02-31) give null. */
+  function dayNumber(iso) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(typeof iso === "string" ? iso : "");
+    if (!m) return null;
+    var y = +m[1], mo = +m[2] - 1, d = +m[3];
+    var t = Date.UTC(y, mo, d);
+    var back = new Date(t);
+    if (back.getUTCFullYear() !== y || back.getUTCMonth() !== mo || back.getUTCDate() !== d) return null;
+    return Math.round(t / 86400000);
+  }
+
+  var FRESH_DAYS = 7;
+
+  /* Fresh drops: published today or in the previous 6 days (7 calendar days in all),
+     going by the visitor's own calendar day. Uses only the resource's publication
+     date ("date"), never an edit date. No valid date, or a date in the future,
+     means not fresh. */
+  function isFresh(resource, now) {
+    var published = dayNumber(resource && resource.date);
+    if (published === null) return false;
+    var n = now || new Date();
+    var today = Math.round(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()) / 86400000);
+    var age = today - published;
+    return age >= 0 && age < FRESH_DAYS;
+  }
+
+  function freshResources(now) {
+    return sortedResources().filter(function (r) { return isFresh(r, now); });
   }
 
   function collections() {
@@ -86,6 +118,7 @@
   }
 
   function formatDate(iso) {
+    if (!iso) return "";
     var d = new Date(iso + "T00:00:00");
     if (isNaN(d.getTime())) return iso;
     return d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
@@ -204,7 +237,7 @@
 
   /* Build tag in the footer. If the page and the scripts show different
      numbers, the browser is using old cached files. */
-  var BUILD = "20261120b";
+  var BUILD = "20261120c";
   var tag = document.getElementById("build");
   if (tag) {
     var pageBuild = tag.getAttribute("data-page");
@@ -220,6 +253,8 @@
     collectionById: collectionById,
     collectionResources: collectionResources,
     sortedResources: sortedResources,
+    isFresh: isFresh,
+    freshResources: freshResources,
     formatDate: formatDate,
     plural: plural,
     matches: matches,
