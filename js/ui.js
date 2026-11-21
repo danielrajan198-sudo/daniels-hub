@@ -22,6 +22,7 @@
     '<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>' +
     '<symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/></symbol>' +
     '<symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></symbol>' +
+    '<symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 5h18l-7 8.5V20l-4-2v-4.5z"/></symbol>' +
     '<symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>' +
     '<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>' +
     '<symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M7 3h10v18l-5-4-5 4z"/></symbol>' +
@@ -278,7 +279,7 @@
 
   /* Build tag in the footer. If the page and the scripts show different
      numbers, the browser is using old cached files. */
-  var BUILD = "20261121b";
+  var BUILD = "20261121c";
   var tag = document.getElementById("build");
   if (tag) {
     var pageBuild = tag.getAttribute("data-page");
@@ -296,6 +297,7 @@
     sortedResources: sortedResources,
     matchesCollection: matchesCollection,
     renderCollectionCard: renderCollectionCard,
+    dayNumber: dayNumber,
     isFresh: isFresh,
     freshResources: freshResources,
     formatDate: formatDate,
