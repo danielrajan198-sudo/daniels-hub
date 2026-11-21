@@ -12,6 +12,42 @@
   var id = new URLSearchParams(window.location.search).get("c");
   var cat = H.categoryById(id);
 
+  /* Back link. The page before this one is read from document.referrer, which only
+     counts when it is one of our own pages.
+       - Came from Browse: the link says "Browse" and goes there.
+       - Came from the homepage, from anywhere else, or from nowhere (a direct link,
+         a bookmark, another site): the link says "Home" and goes to the homepage.
+     When there is real history behind this page the link steps back through it with
+     history.back() instead of adding a new entry, so the browser's Back button never
+     loops. With no history (a new tab, a pasted link) it is an ordinary link, so it
+     always has somewhere to go. Refresh keeps working because the referrer survives it. */
+  function cameFrom() {
+    try {
+      var ref = new URL(document.referrer);
+      if (ref.origin !== window.location.origin) return "";
+      var file = ref.pathname.split("/").pop();
+      if (file === "browse.html") return "browse";
+      if (file === "" || file === "index.html") return "home";
+    } catch (e) { /* no referrer, or not a URL */ }
+    return "";
+  }
+
+  var backLink = root.querySelector(".back");
+  var from = cameFrom();
+  if (backLink) {
+    if (from === "browse") {
+      backLink.setAttribute("href", "browse.html");
+      var label = backLink.querySelector("span");
+      if (label) label.textContent = "Browse";
+    }
+    backLink.addEventListener("click", function (e) {
+      if (from && window.history.length > 1) {
+        e.preventDefault();
+        window.history.back();
+      }
+    });
+  }
+
   if (!cat) {
     document.title = "Category not found · Daniel's Hub";
     var missing = H.el("div", "empty");
