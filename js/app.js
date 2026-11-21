@@ -69,6 +69,13 @@
     return resources.filter(function (r) { return H.matches(r, terms); });
   }
 
+  /* Collections that match the search words. None when nothing is typed. */
+  function visibleCollections() {
+    var terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+    if (terms.length === 0) return [];
+    return H.collections().filter(function (c) { return H.matchesCollection(c, terms); });
+  }
+
   function renderCategories() {
     els.cats.textContent = "";
     categories.forEach(function (cat) {
@@ -89,6 +96,7 @@
     var searching = query.trim().length > 0;
     var admin = adminRevealed();
     var items = visibleResources();
+    var found = visibleCollections();
 
     body.classList.toggle("is-searching", searching);
     els.clear.hidden = query.length === 0;
@@ -103,13 +111,17 @@
 
     els.title.textContent = searching ? "Search results" : "Fresh drops";
     els.status.textContent = searching
-      ? H.plural(items.length, "resource") + " for “" + query.trim() + "”"
+      ? (found.length === 0 ? H.plural(items.length, "resource")
+          : items.length === 0 ? H.plural(found.length, "collection")
+          : H.plural(items.length, "resource") + " and " + H.plural(found.length, "collection"))
+        + " for “" + query.trim() + "”"
       : "";
 
     els.list.textContent = "";
+    found.forEach(function (c) { els.list.appendChild(H.renderCollectionCard(c)); });
     items.forEach(function (r) { els.list.appendChild(H.renderCard(r)); });
 
-    els.empty.hidden = items.length > 0;
+    els.empty.hidden = items.length > 0 || found.length > 0;
     els.emptyTitle.textContent = searching ? "Nothing found" : "No new drops lately";
     els.emptyText.textContent = searching
       ? "No matches for “" + query.trim() + "”. Try a shorter word, or search by category or tag."

@@ -513,3 +513,6 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
   .colls { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
   .coll { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Collection result in search: same card, coloured by the collection's accent */
+.card-coll .card-icon { background: linear-gradient(135deg, var(--accent-a), var(--accent-b)); }

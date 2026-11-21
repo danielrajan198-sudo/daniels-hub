@@ -143,6 +143,47 @@
     return true;
   }
 
+  /* Search for collections: every word typed must appear in the collection's title,
+     description or tags (a collection has no tags yet; they are used if one is added). */
+  function matchesCollection(collection, terms) {
+    var haystack = [
+      collection.name,
+      collection.description,
+      (collection.tags || []).join(" ")
+    ].join(" ").toLowerCase();
+    for (var i = 0; i < terms.length; i++) {
+      if (haystack.indexOf(terms[i]) === -1) return false;
+    }
+    return true;
+  }
+
+  /* A collection in search results. It uses the normal result card, marked with a
+     "Collection" badge and the collection's own colour, and opens its collection page. */
+  function renderCollectionCard(c) {
+    var card = el("a", "card card-coll");
+    card.href = "collection.html?c=" + encodeURIComponent(c.id);
+    card.dataset.accent = c.accent || "violet";
+
+    var ic = el("div", "card-icon");
+    ic.appendChild(icon(c.icon || "i-grid"));
+    card.appendChild(ic);
+
+    var body = el("div", "card-body");
+    var title = el("div", "card-title");
+    title.appendChild(el("span", "", c.name));
+    title.appendChild(el("span", "badge", "Collection"));
+    body.appendChild(title);
+    body.appendChild(el("div", "card-desc", c.description));
+
+    var meta = el("div", "card-meta");
+    meta.appendChild(el("span", "", plural(collectionResources(c).length, "resource")));
+    meta.appendChild(el("span", "", "Open collection"));
+    body.appendChild(meta);
+
+    card.appendChild(body);
+    return card;
+  }
+
   function renderCard(r) {
     var cat = categoryById(r.category);
     var hasLink = r.url && r.url.length > 0;
@@ -237,7 +278,7 @@
 
   /* Build tag in the footer. If the page and the scripts show different
      numbers, the browser is using old cached files. */
-  var BUILD = "20261121a";
+  var BUILD = "20261121b";
   var tag = document.getElementById("build");
   if (tag) {
     var pageBuild = tag.getAttribute("data-page");
@@ -253,6 +294,8 @@
     collectionById: collectionById,
     collectionResources: collectionResources,
     sortedResources: sortedResources,
+    matchesCollection: matchesCollection,
+    renderCollectionCard: renderCollectionCard,
     isFresh: isFresh,
     freshResources: freshResources,
     formatDate: formatDate,
