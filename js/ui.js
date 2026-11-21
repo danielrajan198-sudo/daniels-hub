@@ -222,6 +222,51 @@
     { href: "about.html", label: "About Daniel's Hub", icon: "i-info" }
   ];
 
+  /* Motion helpers. */
+  function prefersReducedMotion() {
+    return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+
+  /* Page transitions are a progressive extra. If the visitor navigates again while one is
+     still running, the browser abandons it and reports that as a rejected promise. That is
+     harmless, so it is silenced here rather than left as an uncaught error. */
+  ["pagereveal", "pageswap"].forEach(function (name) {
+    window.addEventListener(name, function (e) {
+      var t = e && e.viewTransition;
+      if (!t) return;
+      ["ready", "finished", "updateCallbackDone"].forEach(function (k) {
+        if (t[k] && t[k].catch) t[k].catch(function () {});
+      });
+    });
+  });
+
+  /* Show or hide a panel with a short fade on the way out as well as on the way in.
+     The way in is plain CSS (the panel animates when it stops being hidden). The way out
+     adds "is-leaving" for a moment and then hides it for real. With reduced motion it
+     hides at once. */
+  function setVisible(node, show) {
+    window.clearTimeout(node._leaveTimer);
+    if (show) {
+      node.classList.remove("is-leaving");
+      node.hidden = false;
+      return;
+    }
+    if (node.hidden || node.classList.contains("is-leaving")) return;
+    if (prefersReducedMotion()) { node.hidden = true; return; }
+    node.classList.add("is-leaving");
+    node._leaveTimer = window.setTimeout(function () {
+      node.hidden = true;
+      node.classList.remove("is-leaving");
+    }, 140);
+  }
+
+  /* Hide at once, with no leaving animation (used when the whole view changes). */
+  function hideNow(node) {
+    window.clearTimeout(node._leaveTimer);
+    node.classList.remove("is-leaving");
+    node.hidden = true;
+  }
+
   function initMenu() {
     var slot = document.querySelector("[data-menu]");
     if (!slot) return;
@@ -251,35 +296,37 @@
     slot.appendChild(btn);
     slot.appendChild(panel);
 
+    function isClosed() { return panel.hidden || panel.classList.contains("is-leaving"); }
+
     function open(byKeyboard) {
-      panel.hidden = false;
+      setVisible(panel, true);
       btn.setAttribute("aria-expanded", "true");
       if (byKeyboard) panel.querySelector("a").focus();
     }
     function close(returnFocus) {
-      panel.hidden = true;
+      setVisible(panel, false);
       btn.setAttribute("aria-expanded", "false");
       if (returnFocus) btn.focus();
     }
 
     btn.addEventListener("click", function (e) {
-      if (panel.hidden) open(e.detail === 0);
+      if (isClosed()) open(e.detail === 0);
       else close(false);
     });
     document.addEventListener("click", function (e) {
-      if (!panel.hidden && !slot.contains(e.target)) close(false);
+      if (!isClosed() && !slot.contains(e.target)) close(false);
     });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && !panel.hidden) close(true);
+      if (e.key === "Escape" && !isClosed()) close(true);
     });
-    window.addEventListener("pageshow", function () { close(false); });
+    window.addEventListener("pageshow", function () { hideNow(panel); btn.setAttribute("aria-expanded", "false"); });
   }
 
   initMenu();
 
   /* Build tag in the footer. If the page and the scripts show different
      numbers, the browser is using old cached files. */
-  var BUILD = "20261121c";
+  var BUILD = "20261121d";
   var tag = document.getElementById("build");
   if (tag) {
     var pageBuild = tag.getAttribute("data-page");
@@ -298,6 +345,9 @@
     matchesCollection: matchesCollection,
     renderCollectionCard: renderCollectionCard,
     dayNumber: dayNumber,
+    prefersReducedMotion: prefersReducedMotion,
+    setVisible: setVisible,
+    hideNow: hideNow,
     isFresh: isFresh,
     freshResources: freshResources,
     formatDate: formatDate,

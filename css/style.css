@@ -17,6 +17,11 @@
   --gutter: 20px;
   --max: 1080px;
   --kb: 0px;
+  /* Motion: one set of timings and one easing curve for the whole site. */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-fast: 0.15s;
+  --dur: 0.2s;
+  --dur-slow: 0.3s;
   --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color-scheme: dark;
 }
@@ -77,7 +82,7 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 
 /* Pressed state: a gentle brightening and a very small squeeze. Same for every control. */
 .menu-btn, .menu-item, .clear, .cancel, .reset, .back, .admin-link, .top-nav a, .dock a, .cat, a.card {
-  transition: transform 0.15s ease, filter 0.15s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition: transform var(--dur-fast) var(--ease), filter var(--dur-fast) var(--ease), background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
 }
 .menu-btn:active, .clear:active, .cancel:active, .reset:active, .back:active, .admin-link:active,
 .dock a:active, .cat:active, a.card:active, .top-nav a:active {
@@ -94,7 +99,7 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
   padding-top: calc(16px + env(safe-area-inset-top, 0px));
   padding-bottom: 8px;
   max-height: 140px;
-  transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.2s ease;
+  transition: max-height var(--dur-slow) var(--ease), padding var(--dur-slow) var(--ease), opacity var(--dur) var(--ease);
 }
 .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; min-height: 44px; }
 .brand img { display: block; width: 44px; height: 44px; }
@@ -134,16 +139,16 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 /* Parts of the page that can fold away while searching */
 .collapse {
   display: grid; grid-template-rows: 1fr; opacity: 1; visibility: visible;
-  transition: grid-template-rows 0.3s ease, opacity 0.25s ease;
+  transition: grid-template-rows var(--dur-slow) var(--ease), opacity 0.25s var(--ease);
 }
 .collapse > .collapse-inner { min-height: 0; overflow: hidden; }
 .is-searching .browse {
   grid-template-rows: 0fr; opacity: 0; visibility: hidden; pointer-events: none;
-  transition: grid-template-rows 0.3s ease, opacity 0.2s ease, visibility 0s 0.3s;
+  transition: grid-template-rows var(--dur-slow) var(--ease), opacity var(--dur) var(--ease), visibility 0s 0.3s;
 }
 
 /* Hero */
-.hero-inner { display: grid; gap: 12px; padding: 28px 0 16px; transition: padding 0.3s ease, gap 0.3s ease; }
+.hero-inner { display: grid; gap: 12px; padding: 28px 0 16px; transition: padding var(--dur-slow) var(--ease), gap var(--dur-slow) var(--ease); }
 .hero-inner h1 { font-size: 32px; line-height: 1.15; font-weight: 700; letter-spacing: -0.02em; text-wrap: balance; max-width: 18ch; }
 .lede { color: var(--text-soft); font-size: 16px; }
 
@@ -293,7 +298,7 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 .dock {
   position: fixed; left: 50%; transform: translateX(-50%);
   bottom: calc(16px + env(safe-area-inset-bottom, 0px) + var(--kb, 0px));
-  transition: bottom 0.2s ease;
+  transition: bottom var(--dur) var(--ease);
   display: flex; gap: 4px; padding: 6px; border-radius: 32px; z-index: 20;
   background: rgba(36, 32, 92, 0.72); border: 1px solid var(--glass-line);
   -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
@@ -312,7 +317,7 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
   .is-searching .hero,
   .is-focused .browse {
     grid-template-rows: 0fr; opacity: 0; visibility: hidden; pointer-events: none;
-    transition: grid-template-rows 0.3s ease, opacity 0.2s ease, visibility 0s 0.3s;
+    transition: grid-template-rows var(--dur-slow) var(--ease), opacity var(--dur) var(--ease), visibility 0s 0.3s;
   }
   .is-focused .search-wrap,
   .is-searching .search-wrap {
@@ -334,7 +339,7 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
   .is-searching .top {
     max-height: 0; padding-top: 0; padding-bottom: 0; opacity: 0; overflow: hidden;
     visibility: hidden; pointer-events: none;
-    transition: max-height 0.3s ease, padding 0.3s ease, opacity 0.2s ease, visibility 0s 0.3s;
+    transition: max-height var(--dur-slow) var(--ease), padding var(--dur-slow) var(--ease), opacity var(--dur) var(--ease), visibility 0s 0.3s;
   }
   .is-focused .hero .hero-inner,
   .is-searching .hero .hero-inner { padding-top: 0; padding-bottom: 0; gap: 0; }
@@ -375,8 +380,8 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 
 /* Fade-in for freshly rendered cards. Cards are visible by default, the animation only adds polish. */
 @media (prefers-reduced-motion: no-preference) {
-  .card { animation: rise 0.35s ease both; }
-  .menu-panel { animation: pop 0.18s ease both; transform-origin: top right; }
+  .card { animation: rise var(--dur-slow) var(--ease) backwards; }
+  .menu-panel { animation: pop var(--dur) var(--ease) both; transform-origin: top right; }
   @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
   @keyframes pop { from { opacity: 0; transform: scale(0.96) translateY(-4px); } to { opacity: 1; transform: none; } }
 }
@@ -425,7 +430,7 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 .go-dot {
   flex: none; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
   background: rgba(255, 255, 255, 0.12); border: 1px solid var(--glass-line);
-  transition: transform 0.2s ease;
+  transition: transform var(--dur) var(--ease);
 }
 .go-dot svg { width: 16px; height: 16px; }
 .bcat-body { min-width: 0; }
@@ -480,7 +485,7 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 .explore svg { width: 16px; height: 16px; }
 
 /* Press and hover: same gentle feel as the rest of the site */
-.bcat, .coll { transition: transform 0.15s ease, filter 0.15s ease, background 0.2s ease, border-color 0.2s ease; }
+.bcat, .coll { transition: transform var(--dur-fast) var(--ease), filter var(--dur-fast) var(--ease), background var(--dur) var(--ease), border-color var(--dur) var(--ease); }
 .bcat:active { filter: brightness(1.18); transform: scale(0.97); background: var(--glass-strong); }
 .coll:active { filter: brightness(1.15); transform: scale(0.98); }
 @media (hover: hover) and (pointer: fine) {
@@ -491,7 +496,7 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 
 /* "backwards" fill only: a finished animation must not keep overriding the press and hover transforms. */
 @media (prefers-reduced-motion: no-preference) {
-  .bcat, .coll { animation: rise 0.35s ease backwards; }
+  .bcat, .coll { animation: rise var(--dur-slow) var(--ease) backwards; }
   .bcat:nth-child(2), .coll:nth-child(2) { animation-delay: 0.05s; }
   .bcat:nth-child(3), .coll:nth-child(3) { animation-delay: 0.1s; }
   .bcat:nth-child(4) { animation-delay: 0.15s; }
@@ -525,7 +530,7 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
   min-height: 44px; padding: 0 14px; border-radius: 22px;
   font: 600 14px var(--font); color: var(--text);
   background: var(--glass); border: 1px solid var(--glass-line);
-  transition: transform 0.15s ease, filter 0.15s ease, background 0.2s ease, color 0.2s ease;
+  transition: transform var(--dur-fast) var(--ease), filter var(--dur-fast) var(--ease), background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
 .filter-btn svg { width: 18px; height: 18px; }
 .filter-btn:active { filter: brightness(1.18); transform: scale(0.97); }
@@ -555,7 +560,7 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
   display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 20px;
   font: 600 14px var(--font); color: var(--text);
   background: rgba(255, 255, 255, 0.08); border: 1px solid var(--glass-line);
-  transition: transform 0.15s ease, filter 0.15s ease, background 0.2s ease, color 0.2s ease;
+  transition: transform var(--dur-fast) var(--ease), filter var(--dur-fast) var(--ease), background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
 .chip input:checked + span { background: var(--text); color: var(--ink); border-color: var(--text); }
 .chip input:focus-visible + span { outline: 3px solid var(--mint); outline-offset: 3px; }
@@ -564,3 +569,69 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 .filter-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
 .filter-actions .reset[disabled] { opacity: 0.5; cursor: default; }
 .filter-actions .filter-done { background: var(--text); color: var(--ink); border-color: var(--text); }
+
+/* ===== Motion =====
+   One quiet system: short fades with a few pixels of movement, gentle press feedback.
+   Only opacity and transform are animated, so it stays smooth on phones.
+   Nothing here depends on scrolling. Content animates once, when it appears.
+   With reduced motion, the rule near the top of this file switches all of it off. */
+
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes drop { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@keyframes leave { to { opacity: 0; transform: translateY(-4px) scale(0.98); } }
+@keyframes badge-in { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Moving between pages: a quick fade. The bottom bar keeps its place and only its highlight changes. */
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root) { animation: vt-out var(--dur-fast) var(--ease) both; }
+  ::view-transition-new(root) { animation: vt-in var(--dur) var(--ease) both; }
+  @keyframes vt-out { to { opacity: 0; } }
+  @keyframes vt-in { from { opacity: 0; transform: translateY(6px); } }
+  .dock { view-transition-name: dock; }
+
+  /* Page content settles in once on arrival */
+  .hero-inner, .browse-head, .cat-head, .page { animation: rise var(--dur-slow) var(--ease) backwards; }
+
+  /* Result cards: the first few arrive one after another, the rest together */
+  .list .card:nth-child(2) { animation-delay: 0.04s; }
+  .list .card:nth-child(3) { animation-delay: 0.08s; }
+  .list .card:nth-child(4) { animation-delay: 0.12s; }
+  .list .card:nth-child(n+5) { animation-delay: 0.16s; }
+
+  /* Things that appear: the empty message, the Filter row, the filter badge, Cancel */
+  .empty { animation: fade var(--dur) var(--ease) backwards; }
+  .filter-bar:not([hidden]) { animation: fade var(--dur) var(--ease) backwards; }
+  .filter-count:not([hidden]) { animation: badge-in var(--dur) var(--ease) backwards; }
+  .is-focused .cancel, .is-searching .cancel { animation: fade var(--dur) var(--ease) backwards; }
+
+  /* Panels fade in, and fade out again instead of vanishing */
+  .filter-panel { animation: drop var(--dur) var(--ease) backwards; }
+  .menu-panel.is-leaving, .filter-panel.is-leaving { animation: leave var(--dur-fast) var(--ease) forwards; pointer-events: none; }
+}
+
+/* Selection and press feedback */
+.chip span { transition: transform var(--dur-fast) var(--ease), filter var(--dur-fast) var(--ease),
+  background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease); }
+.filter-btn { transition: transform var(--dur-fast) var(--ease), filter var(--dur-fast) var(--ease),
+  background var(--dur) var(--ease), color var(--dur) var(--ease); }
+.filter-count { transition: background var(--dur) var(--ease), color var(--dur) var(--ease); }
+.filter-actions .reset { transition: transform var(--dur-fast) var(--ease), filter var(--dur-fast) var(--ease),
+  background var(--dur) var(--ease), opacity var(--dur) var(--ease); }
+
+/* Bottom bar: the active pill and its icon change smoothly */
+.dock a svg { transition: transform var(--dur) var(--ease); }
+.dock a[aria-current="page"] svg { transform: scale(1.08); }
+
+/* Small icons move a little with their control */
+.explore svg, .back svg, .admin-link .go { transition: transform var(--dur) var(--ease); }
+.coll:active .explore svg, .bcat:active .go-dot { transform: translateX(2px); }
+.back:active svg { transform: translateX(-2px); }
+.admin-link:active .go { transform: translateX(2px); }
+@media (hover: hover) and (pointer: fine) {
+  .coll:hover .explore svg { transform: translateX(2px); }
+  .back:hover svg { transform: translateX(-2px); }
+  .admin-link:hover .go { transform: translateX(2px); }
+  .menu-btn:hover svg, .filter-btn:hover svg { transform: scale(1.06); }
+}
+.menu-btn svg, .filter-btn svg { transition: transform var(--dur) var(--ease); }

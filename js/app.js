@@ -43,6 +43,7 @@
 
   var query = "";
   var blurTimer = null;
+  var shownKey = null;
 
   /* Search filters. They apply to search results only, never to Fresh drops.
        category: narrows resources. Collections are not tied to a category, so they are
@@ -80,6 +81,11 @@
     filters.type = DEFAULT_FILTERS.type;
     filters.sort = DEFAULT_FILTERS.sort;
     filterOpen = false;
+  }
+
+  /* Smooth scrolling unless the visitor has asked for reduced motion. */
+  function scrollBehavior() {
+    return H.prefersReducedMotion() ? "auto" : "smooth";
   }
 
   function isPhone() {
@@ -202,7 +208,8 @@
     var active = activeFilters();
     if (!searching) filterOpen = false;
     els.filterBar.hidden = !searching;
-    els.filterPanel.hidden = !(searching && filterOpen);
+    if (searching) H.setVisible(els.filterPanel, filterOpen);
+    else H.hideNow(els.filterPanel);
     els.filterBtn.setAttribute("aria-expanded", filterOpen ? "true" : "false");
     els.filterCount.hidden = active.length === 0;
     els.filterCount.textContent = active.length;
@@ -259,9 +266,14 @@
         + " for “" + query.trim() + "”"
       : "";
 
-    els.list.textContent = "";
-    found.forEach(function (c) { els.list.appendChild(H.renderCollectionCard(c)); });
-    items.forEach(function (r) { els.list.appendChild(H.renderCard(r)); });
+    var listKey = found.map(function (c) { return "c:" + c.id; })
+      .concat(items.map(function (r) { return "r:" + r.id; })).join(",");
+    if (listKey !== shownKey) {
+      shownKey = listKey;
+      els.list.textContent = "";
+      found.forEach(function (c) { els.list.appendChild(H.renderCollectionCard(c)); });
+      items.forEach(function (r) { els.list.appendChild(H.renderCard(r)); });
+    }
 
     els.empty.hidden = items.length > 0 || found.length > 0;
     els.emptyTitle.textContent = searching ? "Nothing found" : "No new drops lately";
@@ -276,7 +288,7 @@
   /* Phones: bring the search bar to the top so the keyboard never covers it. */
   function bringSearchToTop() {
     if (!isPhone()) return;
-    window.setTimeout(function () { window.scrollTo({ top: 0, behavior: "smooth" }); }, 30);
+    window.setTimeout(function () { window.scrollTo({ top: 0, behavior: scrollBehavior() }); }, 30);
   }
 
   function resetSearch() {
@@ -287,7 +299,7 @@
     body.classList.remove("is-focused");
     render();
     updateDock();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: scrollBehavior() });
   }
 
   /* Android keyboards can finish a word (autocorrect, voice, paste) without a
@@ -337,7 +349,7 @@
 
   els.dockSearch.addEventListener("click", function (e) {
     e.preventDefault();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: scrollBehavior() });
     els.input.focus();
   });
 
