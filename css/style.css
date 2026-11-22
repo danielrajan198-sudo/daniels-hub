@@ -22,6 +22,8 @@
   --dur-fast: 0.15s;
   --dur: 0.2s;
   --dur-slow: 0.3s;
+  --dur-enter: 0.45s;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --font: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color-scheme: dark;
 }
@@ -86,10 +88,10 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 }
 .menu-btn:active, .clear:active, .cancel:active, .reset:active, .back:active, .admin-link:active,
 .dock a:active, .cat:active, a.card:active, .top-nav a:active {
-  filter: brightness(1.18); transform: scale(0.97);
+  filter: brightness(1.28); transform: scale(0.95);
 }
-.menu-item:active { filter: brightness(1.22); background: var(--glass-strong); }
-.cat:active, a.card:active { background: var(--glass-strong); transform: scale(0.98); }
+.menu-item:active { filter: brightness(1.3); background: var(--glass-strong); }
+.cat:active, a.card:active { background: var(--glass-strong); transform: scale(0.97); }
 
 .top, main, .foot { max-width: var(--max); margin-inline: auto; }
 
@@ -380,10 +382,10 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 
 /* Fade-in for freshly rendered cards. Cards are visible by default, the animation only adds polish. */
 @media (prefers-reduced-motion: no-preference) {
-  .card { animation: rise var(--dur-slow) var(--ease) backwards; }
-  .menu-panel { animation: pop var(--dur) var(--ease) both; transform-origin: top right; }
-  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-  @keyframes pop { from { opacity: 0; transform: scale(0.96) translateY(-4px); } to { opacity: 1; transform: none; } }
+  .card { animation: rise var(--dur-enter) var(--ease-out) backwards; }
+  .menu-panel { animation: pop var(--dur-enter) var(--ease-out) both; transform-origin: top right; }
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  @keyframes pop { from { opacity: 0; transform: scale(0.92) translateY(-10px); } to { opacity: 1; transform: none; } }
 }
 
 .build { font-size: 11px; opacity: .45; margin: 6px 0 0; }
@@ -404,7 +406,7 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 }
 
 /* Pressed look wins over hover while a finger or mouse button is down. */
-.cat:active, a.card:active { background: var(--glass-strong); transform: scale(0.98); }
+.cat:active, a.card:active { background: var(--glass-strong); transform: scale(0.97); }
 
 /* ===== Browse page and collection pages ===== */
 .top-nav a[aria-current="page"] { background: var(--glass); color: var(--text); }
@@ -486,17 +488,17 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 
 /* Press and hover: same gentle feel as the rest of the site */
 .bcat, .coll { transition: transform var(--dur-fast) var(--ease), filter var(--dur-fast) var(--ease), background var(--dur) var(--ease), border-color var(--dur) var(--ease); }
-.bcat:active { filter: brightness(1.18); transform: scale(0.97); background: var(--glass-strong); }
-.coll:active { filter: brightness(1.15); transform: scale(0.98); }
+.bcat:active { filter: brightness(1.25); transform: scale(0.95); background: var(--glass-strong); }
+.coll:active { filter: brightness(1.22); transform: scale(0.96); }
 @media (hover: hover) and (pointer: fine) {
   .bcat:hover { background: var(--glass-strong); transform: translateY(-2px); }
-  .bcat:hover .go-dot { transform: translateX(2px); }
+  .bcat:hover .go-dot { transform: translateX(4px); }
   .coll:hover { filter: brightness(1.1); transform: translateY(-2px); }
 }
 
 /* "backwards" fill only: a finished animation must not keep overriding the press and hover transforms. */
 @media (prefers-reduced-motion: no-preference) {
-  .bcat, .coll { animation: rise var(--dur-slow) var(--ease) backwards; }
+  .bcat, .coll { animation: rise var(--dur-enter) var(--ease-out) backwards; }
   .bcat:nth-child(2), .coll:nth-child(2) { animation-delay: 0.05s; }
   .bcat:nth-child(3), .coll:nth-child(3) { animation-delay: 0.1s; }
   .bcat:nth-child(4) { animation-delay: 0.15s; }
@@ -533,7 +535,7 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
   transition: transform var(--dur-fast) var(--ease), filter var(--dur-fast) var(--ease), background var(--dur) var(--ease), color var(--dur) var(--ease);
 }
 .filter-btn svg { width: 18px; height: 18px; }
-.filter-btn:active { filter: brightness(1.18); transform: scale(0.97); }
+.filter-btn:active { filter: brightness(1.28); transform: scale(0.95); }
 .filter-btn[aria-expanded="true"] { background: var(--text); color: var(--ink); }
 .filter-count {
   min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px;
@@ -564,7 +566,7 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 }
 .chip input:checked + span { background: var(--text); color: var(--ink); border-color: var(--text); }
 .chip input:focus-visible + span { outline: 3px solid var(--mint); outline-offset: 3px; }
-.chip input:active + span { filter: brightness(1.18); transform: scale(0.97); }
+.chip input:active + span { filter: brightness(1.28); transform: scale(0.95); }
 .filter-hint { margin: 8px 0 0; font-size: 12px; color: var(--text-soft); }
 .filter-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
 .filter-actions .reset[disabled] { opacity: 0.5; cursor: default; }
@@ -577,37 +579,37 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
    With reduced motion, the rule near the top of this file switches all of it off. */
 
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
-@keyframes drop { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
-@keyframes leave { to { opacity: 0; transform: translateY(-4px) scale(0.98); } }
-@keyframes badge-in { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: none; } }
+@keyframes drop { from { opacity: 0; transform: translateY(-12px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes leave { to { opacity: 0; transform: translateY(-8px) scale(0.96); } }
+@keyframes badge-in { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: none; } }
 
 @media (prefers-reduced-motion: no-preference) {
   /* Moving between pages: a quick fade. The bottom bar keeps its place and only its highlight changes. */
   @view-transition { navigation: auto; }
-  ::view-transition-old(root) { animation: vt-out var(--dur-fast) var(--ease) both; }
-  ::view-transition-new(root) { animation: vt-in var(--dur) var(--ease) both; }
-  @keyframes vt-out { to { opacity: 0; } }
-  @keyframes vt-in { from { opacity: 0; transform: translateY(6px); } }
+  ::view-transition-old(root) { animation: vt-out 0.16s var(--ease) both; }
+  ::view-transition-new(root) { animation: vt-in 0.34s var(--ease-out) both; }
+  @keyframes vt-out { to { opacity: 0; transform: translateY(-6px); } }
+  @keyframes vt-in { from { opacity: 0; transform: translateY(16px); } }
   .dock { view-transition-name: dock; }
 
   /* Page content settles in once on arrival */
-  .hero-inner, .browse-head, .cat-head, .page { animation: rise var(--dur-slow) var(--ease) backwards; }
+  .hero-inner, .browse-head, .cat-head, .page { animation: rise var(--dur-enter) var(--ease-out) backwards; }
 
   /* Result cards: the first few arrive one after another, the rest together */
-  .list .card:nth-child(2) { animation-delay: 0.04s; }
-  .list .card:nth-child(3) { animation-delay: 0.08s; }
-  .list .card:nth-child(4) { animation-delay: 0.12s; }
-  .list .card:nth-child(n+5) { animation-delay: 0.16s; }
+  .list .card:nth-child(2) { animation-delay: 0.07s; }
+  .list .card:nth-child(3) { animation-delay: 0.14s; }
+  .list .card:nth-child(4) { animation-delay: 0.21s; }
+  .list .card:nth-child(n+5) { animation-delay: 0.28s; }
 
   /* Things that appear: the empty message, the Filter row, the filter badge, Cancel */
-  .empty { animation: fade var(--dur) var(--ease) backwards; }
-  .filter-bar:not([hidden]) { animation: fade var(--dur) var(--ease) backwards; }
-  .filter-count:not([hidden]) { animation: badge-in var(--dur) var(--ease) backwards; }
-  .is-focused .cancel, .is-searching .cancel { animation: fade var(--dur) var(--ease) backwards; }
+  .empty { animation: rise var(--dur-enter) var(--ease-out) backwards; }
+  .filter-bar:not([hidden]) { animation: rise var(--dur-enter) var(--ease-out) backwards; }
+  .filter-count:not([hidden]) { animation: badge-in var(--dur-enter) var(--ease-out) backwards; }
+  .is-focused .cancel, .is-searching .cancel { animation: fade var(--dur-enter) var(--ease-out) backwards; }
 
   /* Panels fade in, and fade out again instead of vanishing */
-  .filter-panel { animation: drop var(--dur) var(--ease) backwards; }
-  .menu-panel.is-leaving, .filter-panel.is-leaving { animation: leave var(--dur-fast) var(--ease) forwards; pointer-events: none; }
+  .filter-panel { animation: drop var(--dur-enter) var(--ease-out) backwards; }
+  .menu-panel.is-leaving, .filter-panel.is-leaving { animation: leave 0.18s var(--ease) forwards; pointer-events: none; }
 }
 
 /* Selection and press feedback */
@@ -621,17 +623,17 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 
 /* Bottom bar: the active pill and its icon change smoothly */
 .dock a svg { transition: transform var(--dur) var(--ease); }
-.dock a[aria-current="page"] svg { transform: scale(1.08); }
+.dock a[aria-current="page"] svg { transform: scale(1.18) translateY(-1px); }
 
 /* Small icons move a little with their control */
 .explore svg, .back svg, .admin-link .go { transition: transform var(--dur) var(--ease); }
-.coll:active .explore svg, .bcat:active .go-dot { transform: translateX(2px); }
-.back:active svg { transform: translateX(-2px); }
-.admin-link:active .go { transform: translateX(2px); }
+.coll:active .explore svg, .bcat:active .go-dot { transform: translateX(4px); }
+.back:active svg { transform: translateX(-4px); }
+.admin-link:active .go { transform: translateX(4px); }
 @media (hover: hover) and (pointer: fine) {
-  .coll:hover .explore svg { transform: translateX(2px); }
-  .back:hover svg { transform: translateX(-2px); }
-  .admin-link:hover .go { transform: translateX(2px); }
-  .menu-btn:hover svg, .filter-btn:hover svg { transform: scale(1.06); }
+  .coll:hover .explore svg { transform: translateX(4px); }
+  .back:hover svg { transform: translateX(-4px); }
+  .admin-link:hover .go { transform: translateX(4px); }
+  .menu-btn:hover svg, .filter-btn:hover svg { transform: scale(1.14); }
 }
 .menu-btn svg, .filter-btn svg { transition: transform var(--dur) var(--ease); }

@@ -257,7 +257,7 @@
     node._leaveTimer = window.setTimeout(function () {
       node.hidden = true;
       node.classList.remove("is-leaving");
-    }, 140);
+    }, 180);
   }
 
   /* Hide at once, with no leaving animation (used when the whole view changes). */
@@ -326,7 +326,7 @@
 
   /* Build tag in the footer. If the page and the scripts show different
      numbers, the browser is using old cached files. */
-  var BUILD = "20261121d";
+  var BUILD = "20261122a";
   var tag = document.getElementById("build");
   if (tag) {
     var pageBuild = tag.getAttribute("data-page");
