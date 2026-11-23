@@ -185,6 +185,103 @@
     return card;
   }
 
+
+  /* Saved resources. Only resource ids are kept, in this browser's localStorage, so the
+     card text always comes from the current data. Newest save is last in the list.
+     If storage is blocked (some private modes) saving still works until the page closes. */
+  var SAVED_KEY = "hub.saved.v1";
+  var memorySaved = null;
+
+  function cleanIds(list) {
+    var out = [];
+    if (!Array.isArray(list)) return out;
+    list.forEach(function (id) {
+      if (typeof id === "string" && id.length > 0 && id.length <= 100 && out.indexOf(id) === -1) out.push(id);
+    });
+    return out;
+  }
+  function readSaved() {
+    try {
+      var raw = window.localStorage.getItem(SAVED_KEY);
+      return cleanIds(raw ? JSON.parse(raw) : []);
+    } catch (e) {
+      return memorySaved ? memorySaved.slice() : [];
+    }
+  }
+  function writeSaved(ids) {
+    try { window.localStorage.setItem(SAVED_KEY, JSON.stringify(ids)); memorySaved = null; }
+    catch (e) { memorySaved = ids.slice(); }
+  }
+  function announceSaved(id, saved, external) {
+    document.dispatchEvent(new CustomEvent("hub:saved-change", { detail: { id: id, saved: saved, external: !!external } }));
+  }
+  var saved = {
+    ids: readSaved,
+    has: function (id) { return readSaved().indexOf(id) !== -1; },
+    set: function (id, on) {
+      var ids = readSaved();
+      var i = ids.indexOf(id);
+      if (on && i === -1) ids.push(id);
+      else if (!on && i !== -1) ids.splice(i, 1);
+      else return on;
+      writeSaved(ids);
+      syncSaveButtons();
+      announceSaved(id, on, false);
+      return on;
+    },
+    toggle: function (id) { return saved.set(id, !saved.has(id)); },
+    /* Drop ids that no longer match a resource. Skipped when there is no resource data at all. */
+    prune: function () {
+      if (!data.resources || !data.resources.length) return;
+      var keep = readSaved().filter(function (id) { return !!resourceById(id); });
+      var raw = null;
+      try { raw = window.localStorage.getItem(SAVED_KEY); } catch (e) { return; }
+      if (raw !== null && raw !== JSON.stringify(keep)) writeSaved(keep);
+    }
+  };
+
+  function resourceById(id) {
+    var list = data.resources || [];
+    for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i];
+    return null;
+  }
+
+  function syncSaveButtons() {
+    var ids = readSaved();
+    var buttons = document.querySelectorAll(".save-btn[data-id]");
+    for (var i = 0; i < buttons.length; i++) {
+      var on = ids.indexOf(buttons[i].getAttribute("data-id")) !== -1;
+      buttons[i].setAttribute("aria-pressed", on ? "true" : "false");
+    }
+  }
+
+  /* Another tab changed the list, or this page came back from the back/forward cache. */
+  window.addEventListener("storage", function (e) {
+    if (e.key !== SAVED_KEY && e.key !== null) return;
+    syncSaveButtons();
+    announceSaved("", false, true);
+  });
+  window.addEventListener("pageshow", function (e) { if (e.persisted) { syncSaveButtons(); announceSaved("", false, true); } });
+
+  function saveButton(r) {
+    var b = el("button", "save-btn");
+    b.type = "button";
+    b.dataset.id = r.id;
+    b.setAttribute("aria-label", "Save " + r.title);
+    b.setAttribute("aria-pressed", saved.has(r.id) ? "true" : "false");
+    b.appendChild(icon("i-bookmark"));
+    b.addEventListener("click", function () {
+      var on = saved.toggle(r.id);
+      if (on) {
+        b.classList.remove("just-saved");
+        void b.offsetWidth;
+        b.classList.add("just-saved");
+      }
+    });
+    b.addEventListener("animationend", function () { b.classList.remove("just-saved"); });
+    return b;
+  }
+
   function renderCard(r) {
     var cat = categoryById(r.category);
     var hasLink = r.url && r.url.length > 0;
@@ -213,7 +310,13 @@
     body.appendChild(meta);
 
     card.appendChild(body);
-    return card;
+
+    /* The bookmark sits beside the card, not inside it: a button must not live inside a link. */
+    var wrap = el("div", "card-wrap");
+    wrap.dataset.id = r.id;
+    wrap.appendChild(card);
+    wrap.appendChild(saveButton(r));
+    return wrap;
   }
 
   /* Hamburger menu. To add a page to the menu, add a line to MENU_ITEMS. */
@@ -326,7 +429,7 @@
 
   /* Build tag in the footer. If the page and the scripts show different
      numbers, the browser is using old cached files. */
-  var BUILD = "20261122a";
+  var BUILD = "20261123a";
   var tag = document.getElementById("build");
   if (tag) {
     var pageBuild = tag.getAttribute("data-page");
@@ -353,6 +456,8 @@
     formatDate: formatDate,
     plural: plural,
     matches: matches,
-    renderCard: renderCard
+    renderCard: renderCard,
+    saved: saved,
+    resourceById: resourceById
   };
 })();

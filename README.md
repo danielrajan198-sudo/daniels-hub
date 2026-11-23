@@ -21,6 +21,7 @@ There is no build step and nothing to install.
 | `js/browse.js` | Browse page |
 | `js/category.js` | Category pages |
 | `js/collection.js` | Collection pages |
+| `js/saved.js` | Saved Resources page |
 | `js/config.js` | Settings, including the secret phrase that reveals the Admin Login link |
 | `js/data.js` | **Sample** categories, resources and collections. The dashboard will replace this later |
 | `assets/logo.svg` | Logo for the website header |
@@ -54,3 +55,12 @@ Phones keep copies of CSS and JavaScript for several minutes. Every page therefo
 `css/style.css?v=BUILD` and `js/app.js?v=BUILD`. When you change any CSS or JS file, change `BUILD`
 in all the HTML files and in `js/ui.js`. The footer shows the build number; if it says
 "refresh to update", the phone is still using old files.
+
+## Saved resources
+
+Each resource card has a bookmark button. Saving needs no account: the ids of saved
+resources are kept in this browser's localStorage under `hub.saved.v1` (a list of ids, newest
+last). Only ids are stored, so card text always comes from `js/data.js`. Ids that no longer
+exist are skipped and cleaned out when the Saved Resources page opens. Saved items belong to
+one browser on one device; clearing site data removes them. The shared code is `Hub.saved`
+in `js/ui.js`. The bookmark sits beside the card link (inside a `.card-wrap`), not inside it.

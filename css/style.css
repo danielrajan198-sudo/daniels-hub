@@ -382,7 +382,7 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 
 /* Fade-in for freshly rendered cards. Cards are visible by default, the animation only adds polish. */
 @media (prefers-reduced-motion: no-preference) {
-  .card { animation: rise var(--dur-enter) var(--ease-out) backwards; }
+  :not(.card-wrap) > .card, .card-wrap { animation: rise var(--dur-enter) var(--ease-out) backwards; }
   .menu-panel { animation: pop var(--dur-enter) var(--ease-out) both; transform-origin: top right; }
   @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
   @keyframes pop { from { opacity: 0; transform: scale(0.92) translateY(-10px); } to { opacity: 1; transform: none; } }
@@ -596,10 +596,10 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
   .hero-inner, .browse-head, .cat-head, .page { animation: rise var(--dur-enter) var(--ease-out) backwards; }
 
   /* Result cards: the first few arrive one after another, the rest together */
-  .list .card:nth-child(2) { animation-delay: 0.07s; }
-  .list .card:nth-child(3) { animation-delay: 0.14s; }
-  .list .card:nth-child(4) { animation-delay: 0.21s; }
-  .list .card:nth-child(n+5) { animation-delay: 0.28s; }
+  .list > :nth-child(2) { animation-delay: 0.07s; }
+  .list > :nth-child(3) { animation-delay: 0.14s; }
+  .list > :nth-child(4) { animation-delay: 0.21s; }
+  .list > :nth-child(n+5) { animation-delay: 0.28s; }
 
   /* Things that appear: the empty message, the Filter row, the filter badge, Cancel */
   .empty { animation: rise var(--dur-enter) var(--ease-out) backwards; }
@@ -609,8 +609,32 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
 
   /* Panels fade in, and fade out again instead of vanishing */
   .filter-panel { animation: drop var(--dur-enter) var(--ease-out) backwards; }
-  .menu-panel.is-leaving, .filter-panel.is-leaving { animation: leave 0.18s var(--ease) forwards; pointer-events: none; }
+  .menu-panel.is-leaving, .filter-panel.is-leaving, .card-wrap.is-leaving { animation: leave 0.18s var(--ease) forwards; pointer-events: none; }
 }
+
+/* Bookmark button: sits at the top right of a resource card, beside the card link */
+.card-wrap { position: relative; }
+.card-wrap > .card { padding-right: 52px; height: 100%; }
+.save-btn {
+  appearance: none; position: absolute; top: 4px; right: 4px;
+  width: 44px; height: 44px; display: grid; place-items: center;
+  padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer;
+  color: var(--text-soft); -webkit-tap-highlight-color: transparent;
+  transition: transform var(--dur-fast) var(--ease), filter var(--dur-fast) var(--ease), color var(--dur) var(--ease);
+}
+.save-btn svg { width: 20px; height: 20px; transition: fill var(--dur) var(--ease); }
+.save-btn[aria-pressed="true"] { color: var(--mint); }
+.save-btn[aria-pressed="true"] svg { fill: currentColor; }
+.save-btn:active { filter: brightness(1.28); transform: scale(0.88); }
+@media (hover: hover) and (pointer: fine) {
+  .save-btn:hover { color: var(--text); }
+  .save-btn[aria-pressed="true"]:hover { color: var(--mint); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .save-btn.just-saved svg { animation: badge-in var(--dur) var(--ease-out); }
+}
+.saved-list { margin-top: 12px; }
+.saved-list[hidden], .page .empty[hidden], #saved-count[hidden] { display: none; }
 
 /* Selection and press feedback */
 .chip span { transition: transform var(--dur-fast) var(--ease), filter var(--dur-fast) var(--ease),
@@ -637,3 +661,5 @@ a, button, summary, [role="button"] { -webkit-tap-highlight-color: transparent; 
   .menu-btn:hover svg, .filter-btn:hover svg { transform: scale(1.14); }
 }
 .menu-btn svg, .filter-btn svg { transition: transform var(--dur) var(--ease); }
+
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
